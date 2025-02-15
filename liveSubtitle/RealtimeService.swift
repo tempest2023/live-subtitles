@@ -1,9 +1,9 @@
 import Foundation
 import WebKit
 
-class RealtimeService: ObservableObject {
+class RealtimeService: RealtimeServiceProtocol {
     enum Const {
-        static let realtimeWebSocketURL = "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview-2024-12-17"
+        static let realtimeWebSocketURL = "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview"
     }
     
     private var webSocket: URLSessionWebSocketTask?
@@ -15,7 +15,7 @@ class RealtimeService: ObservableObject {
     var onTranscriptionUpdate: ((String) -> Void)?
     var onTranslationUpdate: ((String) -> Void)?
     
-    init(apiKey: String,
+    required init(apiKey: String,
          onTranscriptionUpdate: ((String) -> Void)? = nil,
          onTranslationUpdate: ((String) -> Void)? = nil) {
         self.apiKey = apiKey
@@ -26,10 +26,12 @@ class RealtimeService: ObservableObject {
     
     private func setupWebSocket() {
         guard let url = URL(string: Const.realtimeWebSocketURL) else {
+            print("[ERROR] Invalid WebSocket URL")
             error = "Invalid URL"
             return
         }
         
+        print("[DEBUG] Setting up WebSocket connection")
         var request = URLRequest(url: url)
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.setValue("realtime=v1", forHTTPHeaderField: "OpenAI-Beta")
@@ -38,6 +40,7 @@ class RealtimeService: ObservableObject {
         webSocket = session.webSocketTask(with: request)
         
         webSocket?.resume()
+        print("[DEBUG] WebSocket connection started")
         receiveMessage()
         
         isConnected = true
@@ -47,20 +50,24 @@ class RealtimeService: ObservableObject {
         webSocket?.receive { [weak self] result in
             switch result {
             case .success(let message):
+                print("[DEBUG] Received WebSocket message")
                 switch message {
                 case .string(let text):
+                    print("[DEBUG] Text message: \(text)")
                     self?.handleMessage(text)
                 case .data(let data):
                     if let text = String(data: data, encoding: .utf8) {
+                        print("[DEBUG] Data message: \(text)")
                         self?.handleMessage(text)
                     }
                 @unknown default:
+                    print("[WARN] Unknown message type received")
                     break
                 }
-                // 继续接收下一条消息
                 self?.receiveMessage()
                 
             case .failure(let error):
+                print("[ERROR] WebSocket receive error: \(error)")
                 DispatchQueue.main.async {
                     self?.error = error.localizedDescription
                     self?.isConnected = false
@@ -89,6 +96,7 @@ class RealtimeService: ObservableObject {
     }
     
     func sendAudioData(_ audioData: Data, sourceLanguage: String, targetLanguage: String) {
+        print("[DEBUG] Preparing to send audio data: \(audioData.count) bytes")
         let event: [String: Any] = [
             "type": "response.create",
             "response": [
@@ -104,21 +112,25 @@ class RealtimeService: ObservableObject {
         
         guard let jsonData = try? JSONSerialization.data(withJSONObject: event),
               let jsonString = String(data: jsonData, encoding: .utf8) else {
+            print("[ERROR] Failed to serialize event data")
             error = "Failed to serialize event"
             return
         }
         
+        print("[DEBUG] Sending event: \(jsonString)")
         webSocket?.send(.string(jsonString)) { [weak self] error in
             if let error = error {
+                print("[ERROR] Failed to send event: \(error)")
                 DispatchQueue.main.async {
                     self?.error = error.localizedDescription
                 }
             }
         }
         
-        // 发送音频数据
+        print("[DEBUG] Sending audio data")
         webSocket?.send(.data(audioData)) { [weak self] error in
             if let error = error {
+                print("[ERROR] Failed to send audio data: \(error)")
                 DispatchQueue.main.async {
                     self?.error = error.localizedDescription
                 }
@@ -127,6 +139,7 @@ class RealtimeService: ObservableObject {
     }
     
     func disconnect() {
+        print("[DEBUG] Disconnecting WebSocket")
         webSocket?.cancel(with: .goingAway, reason: nil)
         isConnected = false
     }
@@ -135,20 +148,3 @@ class RealtimeService: ObservableObject {
         disconnect()
     }
 }
-
-// Response models
-struct RealtimeResponse: Codable {
-    let type: String
-    let text: TextContent?
-    let error: ErrorContent?
-    
-    struct TextContent: Codable {
-        let original: String
-        let translation: String
-    }
-    
-    struct ErrorContent: Codable {
-        let message: String
-        let code: String
-    }
-} 
