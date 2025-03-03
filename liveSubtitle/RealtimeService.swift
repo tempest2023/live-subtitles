@@ -61,7 +61,7 @@ class RealtimeService: RealtimeServiceProtocol {
                         self?.handleMessage(text)
                     }
                 @unknown default:
-                    print("[WARN] Unknown message type received")
+                    print("[WARN] (not data or string) message type received")
                     break
                 }
                 self?.receiveMessage()

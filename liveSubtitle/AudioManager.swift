@@ -123,15 +123,18 @@ class AudioManager: AudioManagerProtocol {
     
     func startRecording() {
         guard microphoneAccessGranted else {
+            print("[DEBUG] Recording failed: No microphone permission")
             errorMessage = "Please grant microphone access first."
             return
         }
         
         if isRecording {
+            print("[DEBUG] Stopping previous recording session")
             stopRecording()
         }
         
         do {
+            print("[DEBUG] Starting new recording session")
             let session = AVAudioSession.sharedInstance()
             try session.setCategory(.record, mode: .measurement, options: .duckOthers)
             try session.setActive(true, options: .notifyOthersOnDeactivation)
@@ -174,25 +177,29 @@ class AudioManager: AudioManagerProtocol {
             }
             
             try audioEngine.start()
+            print("[DEBUG] Audio engine started successfully")
             
             isRecording = true
             errorMessage = nil
             
         } catch {
             errorMessage = "Error starting recording: \(error.localizedDescription)"
-            print("[ERROR] starting audio engine: \(error)")
+            print("[ERROR] Failed to start audio engine: \(error)")
             stopRecording()
         }
     }
     
     func stopRecording() {
+        print("[DEBUG] Stopping recording session")
         audioEngine.stop()
         
         if inputNode.numberOfInputs > 0 {
             inputNode.removeTap(onBus: 0)
+            print("[DEBUG] Audio tap removed")
         }
         
         converter = nil
+        print("[DEBUG] Audio converter released")
         
         do {
             try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
