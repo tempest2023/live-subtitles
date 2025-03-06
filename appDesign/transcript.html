@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>转录详情 - 语音笔记应用</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .transcript-header {
+            background-color: #f5f5f7;
+            padding: 16px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .transcript-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .transcript-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #8e8e93;
+            font-size: 14px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .action-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px;
+            background-color: #f5f5f7;
+            border-radius: 12px;
+            flex: 1;
+            transition: all 0.2s;
+        }
+        
+        .action-button:hover {
+            background-color: #e5e5ea;
+        }
+        
+        .action-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #007aff;
+        }
+        
+        .action-label {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .transcript-section {
+            margin-bottom: 24px;
+        }
+        
+        .section-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-icon {
+            margin-right: 8px;
+            color: #007aff;
+        }
+        
+        .transcript-text {
+            line-height: 1.6;
+            background-color: white;
+            border: 1px solid #e5e5ea;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .summary-card {
+            background-color: #f0f8ff;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-left: 4px solid #007aff;
+        }
+        
+        .keyword-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .keyword-tag {
+            background-color: #e5e5ea;
+            color: #636366;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .audio-player {
+            background-color: #f5f5f7;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .player-controls {
+            display: flex;
+            align-items: center;
+            margin-right: 12px;
+        }
+        
+        .play-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #007aff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            margin-right: 8px;
+        }
+        
+        .player-progress {
+            flex: 1;
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background-color: #d1d1d6;
+            border-radius: 2px;
+            position: relative;
+        }
+        
+        .progress-value {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 35%;
+            background-color: #007aff;
+            border-radius: 2px;
+        }
+        
+        .player-time {
+            font-size: 12px;
+            color: #8e8e93;
+            margin-top: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body class="bg-white h-screen flex flex-col">
+    <!-- iOS 状态栏 -->
+    <div class="ios-status-bar border-b border-gray-200">
+        <div class="status-bar-time" id="status-time">9:41</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- 导航栏 -->
+    <div class="flex justify-between items-center p-4 bg-white border-b border-gray-200">
+        <button class="text-blue-500">
+            <i class="fas fa-chevron-left mr-1"></i>返回
+        </button>
+        <h1 class="text-lg font-semibold">转录详情</h1>
+        <button class="text-blue-500">
+            <i class="fas fa-ellipsis-h"></i>
+        </button>
+    </div>
+    
+    <div class="content-container fade-in overflow-y-auto">
+        <!-- 转录标题和元数据 -->
+        <div class="transcript-header">
+            <div class="transcript-title">产品讨论会议</div>
+            <div class="transcript-meta">
+                <div>随意聊天模式 • 3分45秒</div>
+                <div>2023-06-15</div>
+            </div>
+        </div>
+        
+        <!-- 操作按钮 -->
+        <div class="action-buttons">
+            <div class="action-button">
+                <i class="fas fa-edit action-icon"></i>
+                <span class="action-label">编辑</span>
+            </div>
+            <div class="action-button">
+                <i class="fas fa-share-alt action-icon"></i>
+                <span class="action-label">分享</span>
+            </div>
+            <div class="action-button">
+                <i class="fas fa-file-export action-icon"></i>
+                <span class="action-label">导出</span>
+            </div>
+        </div>
+        
+        <!-- 音频播放器 -->
+        <div class="audio-player">
+            <div class="player-controls">
+                <button class="play-button">
+                    <i class="fas fa-play"></i>
+                </button>
+                <div>1.0x</div>
+            </div>
+            <div class="player-progress">
+                <div class="progress-bar">
+                    <div class="progress-value"></div>
+                </div>
+                <div class="player-time">
+                    <div>01:20</div>
+                    <div>03:45</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 摘要部分 -->
+        <div class="transcript-section">
+            <div class="section-title">
+                <i class="fas fa-star section-icon"></i>
+                <span>AI 摘要</span>
+            </div>
+            <div class="summary-card">
+                <p>会议讨论了一个新的语音转文字应用项目，重点关注了现有应用的三个主要问题：1) 转录准确率低，特别是在噪音环境；2) 缺乏针对不同场景的优化；3) 缺少会议摘要功能。团队决定开发一款具有更精准转录、场景化模式选择和智能摘要功能的应用。</p>
+            </div>
+        </div>
+        
+        <!-- 关键词部分 -->
+        <div class="transcript-section">
+            <div class="section-title">
+                <i class="fas fa-tags section-icon"></i>
+                <span>关键词</span>
+            </div>
+            <div class="keyword-tags">
+                <div class="keyword-tag">语音转文字</div>
+                <div class="keyword-tag">转录准确率</div>
+                <div class="keyword-tag">场景优化</div>
+                <div class="keyword-tag">会议摘要</div>
+                <div class="keyword-tag">移动应用</div>
+                <div class="keyword-tag">市场调研</div>
+            </div>
+        </div>
+        
+        <!-- 转录内容 -->
+        <div class="transcript-section">
+            <div class="section-title">
+                <i class="fas fa-file-alt section-icon"></i>
+                <span>完整转录</span>
+            </div>
+            <div class="transcript-text">
+                <p><strong>00:01:15</strong> 嗨，今天真是个好天气！我们来讨论一下这个新项目的想法吧。</p>
+                <p><strong>00:01:45</strong> 好的，这个项目主要是要解决用户在移动端的录音和转文字的需求。根据我们的市场调研，现有的应用存在以下几个问题...</p>
+                <p><strong>00:02:20</strong> 首先是转录准确率问题，特别是在噪音环境下。其次是缺乏针对不同场景的优化。</p>
+                <p><strong>00:02:52</strong> 第三，用户希望能够快速生成会议摘要，而不仅仅是原始记录。</p>
+                <p><strong>00:03:30</strong> 所以我们的app需要专注解决这些痛点，提供更精准的转录、场景化的模式选择和智能摘要功能。</p>
+            </div>
+            <button class="secondary-button w-full">
+                <i class="fas fa-pen mr-2"></i>编辑转录文本
+            </button>
+        </div>
+    </div>
+    
+    <!-- 底部标签栏 -->
+    <div class="tab-bar">
+        <div class="tab-item">
+            <i class="fas fa-home tab-icon"></i>
+            <div class="tab-label">首页</div>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-microphone tab-icon"></i>
+            <div class="tab-label">录音</div>
+        </div>
+        <div class="tab-item active">
+            <i class="fas fa-history tab-icon"></i>
+            <div class="tab-label">历史</div>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-user tab-icon"></i>
+            <div class="tab-label">我的</div>
+        </div>
+    </div>
+</body>
+<script>
+    // 更新状态栏时间
+    function updateTime() {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        document.getElementById('status-time').innerText = `${hours}:${minutes}`;
+    }
+    
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+        updateTime();
+        setInterval(updateTime, 60000);
+    });
+</script>
+</html> 

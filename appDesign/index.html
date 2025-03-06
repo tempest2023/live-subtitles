@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>语音笔记应用原型</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f5f5f7;
+            padding: 20px;
+        }
+        .phone-container {
+            width: 390px;
+            height: 844px;
+            background-color: white;
+            border-radius: 40px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin: 20px;
+            display: inline-block;
+        }
+        .screen-title {
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto">
+        <h1 class="text-3xl font-bold my-5 text-center">语音笔记应用 - 高保真原型</h1>
+        
+        <div class="flex flex-wrap justify-center">
+            <div class="flex flex-col items-center">
+                <div class="screen-title">登录界面</div>
+                <div class="phone-container">
+                    <iframe src="login.html"></iframe>
+                </div>
+            </div>
+            
+            <div class="flex flex-col items-center">
+                <div class="screen-title">主页/模式选择</div>
+                <div class="phone-container">
+                    <iframe src="home.html"></iframe>
+                </div>
+            </div>
+            
+            <div class="flex flex-col items-center">
+                <div class="screen-title">录音/转录界面</div>
+                <div class="phone-container">
+                    <iframe src="recording.html"></iframe>
+                </div>
+            </div>
+            
+            <div class="flex flex-col items-center">
+                <div class="screen-title">转录详情/编辑</div>
+                <div class="phone-container">
+                    <iframe src="transcript.html"></iframe>
+                </div>
+            </div>
+            
+            <div class="flex flex-col items-center">
+                <div class="screen-title">历史记录</div>
+                <div class="phone-container">
+                    <iframe src="history.html"></iframe>
+                </div>
+            </div>
+            
+            <div class="flex flex-col items-center">
+                <div class="screen-title">设置/个人资料</div>
+                <div class="phone-container">
+                    <iframe src="settings.html"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

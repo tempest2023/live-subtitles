@@ -1,0 +1,157 @@
+/* 通用样式和组件 */
+.ios-status-bar {
+    height: 44px;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.status-bar-time {
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.status-bar-icons {
+    display: flex;
+    gap: 5px;
+}
+
+.tab-bar {
+    height: 83px;
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid #e5e5e5;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+}
+
+.tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    color: #8e8e93;
+}
+
+.tab-item.active {
+    color: #007aff;
+}
+
+.tab-icon {
+    font-size: 24px;
+    margin-bottom: 2px;
+}
+
+.tab-label {
+    font-size: 10px;
+}
+
+/* 模式颜色样式 */
+.mode-casual {
+    background-color: #F0F8FF; /* 浅蓝色 */
+}
+
+.mode-business {
+    background-color: #F5F5F5; /* 浅灰色 */
+}
+
+.mode-interview {
+    background-color: #F0FFF0; /* 浅绿色 */
+}
+
+.mode-movie {
+    background-color: #FFF0F5; /* 浅粉色 */
+}
+
+.mode-data {
+    background-color: #FFF8DC; /* 浅黄色 */
+}
+
+.primary-button {
+    background-color: #007aff;
+    color: white;
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.primary-button:hover {
+    background-color: #0056b3;
+}
+
+.secondary-button {
+    background-color: #f5f5f7;
+    color: #007aff;
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.secondary-button:hover {
+    background-color: #e5e5ea;
+}
+
+.content-container {
+    padding: 20px;
+    height: calc(100% - 127px); /* 状态栏高度 + 底部导航栏高度 */
+    overflow-y: auto;
+}
+
+/* iOS风格的输入框 */
+.ios-input {
+    border-radius: 10px;
+    background-color: #f5f5f7;
+    border: none;
+    padding: 14px 16px;
+    font-size: 16px;
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.ios-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 125, 250, 0.2);
+}
+
+/* iOS卡片样式 */
+.ios-card {
+    background-color: white;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    width: 100%;
+}
+
+/* 动画效果 */
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.slide-up {
+    animation: slideUp 0.3s ease-in-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+} 

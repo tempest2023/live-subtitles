@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史记录 - 语音笔记应用</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .history-header {
+            padding: 20px 20px 10px 20px;
+            border-bottom: 1px solid #e5e5ea;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: #f2f2f7;
+            border-radius: 10px;
+            padding: 8px 12px;
+            margin-bottom: 16px;
+        }
+        
+        .search-icon {
+            color: #8e8e93;
+            margin-right: 8px;
+        }
+        
+        .search-input {
+            background: transparent;
+            border: none;
+            flex: 1;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .filter-tabs {
+            display: flex;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        
+        .filter-tab {
+            padding: 8px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-right: 8px;
+            white-space: nowrap;
+            background-color: #f5f5f7;
+            color: #636366;
+        }
+        
+        .filter-tab.active {
+            background-color: #007aff;
+            color: white;
+        }
+        
+        .date-divider {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #8e8e93;
+            background-color: #f5f5f7;
+            margin-bottom: 10px;
+        }
+        
+        .history-item {
+            display: flex;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e5e5ea;
+            transition: all 0.2s;
+        }
+        
+        .history-item:active {
+            background-color: #f5f5f7;
+        }
+        
+        .item-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background-color: #f2f2f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 16px;
+            font-size: 20px;
+        }
+        
+        .item-content {
+            flex: 1;
+        }
+        
+        .item-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .item-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #8e8e93;
+            font-size: 14px;
+        }
+        
+        .mode-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .mode-casual-dot {
+            background-color: #007aff;
+        }
+        
+        .mode-business-dot {
+            background-color: #6e6e73;
+        }
+        
+        .mode-interview-dot {
+            background-color: #34c759;
+        }
+        
+        .mode-movie-dot {
+            background-color: #ff2d55;
+        }
+        
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 40px;
+            text-align: center;
+            color: #8e8e93;
+        }
+        
+        .empty-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #c7c7cc;
+        }
+    </style>
+</head>
+<body class="bg-white h-screen flex flex-col">
+    <!-- iOS 状态栏 -->
+    <div class="ios-status-bar">
+        <div class="status-bar-time" id="status-time">9:41</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <div class="flex-1 overflow-hidden flex flex-col">
+        <div class="history-header">
+            <div class="page-title">历史记录</div>
+            
+            <!-- 搜索栏 -->
+            <div class="search-bar">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="搜索转录记录">
+            </div>
+            
+            <!-- 过滤标签 -->
+            <div class="filter-tabs">
+                <div class="filter-tab active">全部</div>
+                <div class="filter-tab">随意聊天</div>
+                <div class="filter-tab">商务会议</div>
+                <div class="filter-tab">访谈记录</div>
+                <div class="filter-tab">影视内容</div>
+                <div class="filter-tab">数据分析</div>
+            </div>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto fade-in">
+            <!-- 今天的记录 -->
+            <div class="date-divider">今天</div>
+            
+            <div class="history-item slide-up">
+                <div class="item-icon" style="color: #007aff;">
+                    <i class="fas fa-microphone-alt"></i>
+                </div>
+                <div class="item-content">
+                    <div class="item-title">产品讨论会议</div>
+                    <div class="item-meta">
+                        <div>
+                            <span class="mode-indicator mode-casual-dot"></span>
+                            随意聊天 • 3:45
+                        </div>
+                        <div>11:30</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="history-item slide-up" style="animation-delay: 0.1s;">
+                <div class="item-icon" style="color: #34c759;">
+                    <i class="fas fa-microphone-alt"></i>
+                </div>
+                <div class="item-content">
+                    <div class="item-title">用户访谈记录</div>
+                    <div class="item-meta">
+                        <div>
+                            <span class="mode-indicator mode-interview-dot"></span>
+                            访谈记录 • 12:28
+                        </div>
+                        <div>09:15</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 昨天的记录 -->
+            <div class="date-divider">昨天</div>
+            
+            <div class="history-item slide-up" style="animation-delay: 0.2s;">
+                <div class="item-icon" style="color: #6e6e73;">
+                    <i class="fas fa-microphone-alt"></i>
+                </div>
+                <div class="item-content">
+                    <div class="item-title">季度业务回顾</div>
+                    <div class="item-meta">
+                        <div>
+                            <span class="mode-indicator mode-business-dot"></span>
+                            商务会议 • 45:12
+                        </div>
+                        <div>16:20</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="history-item slide-up" style="animation-delay: 0.3s;">
+                <div class="item-icon" style="color: #ff2d55;">
+                    <i class="fas fa-microphone-alt"></i>
+                </div>
+                <div class="item-content">
+                    <div class="item-title">电影《盗梦空间》分析</div>
+                    <div class="item-meta">
+                        <div>
+                            <span class="mode-indicator mode-movie-dot"></span>
+                            影视内容 • 15:30
+                        </div>
+                        <div>14:05</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 过去7天的记录 -->
+            <div class="date-divider">过去7天</div>
+            
+            <div class="history-item slide-up" style="animation-delay: 0.4s;">
+                <div class="item-icon" style="color: #007aff;">
+                    <i class="fas fa-microphone-alt"></i>
+                </div>
+                <div class="item-content">
+                    <div class="item-title">产品规划会议</div>
+                    <div class="item-meta">
+                        <div>
+                            <span class="mode-indicator mode-casual-dot"></span>
+                            随意聊天 • 28:15
+                        </div>
+                        <div>6月12日</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="history-item slide-up" style="animation-delay: 0.5s;">
+                <div class="item-icon" style="color: #ff9500;">
+                    <i class="fas fa-microphone-alt"></i>
+                </div>
+                <div class="item-content">
+                    <div class="item-title">数据分析报告</div>
+                    <div class="item-meta">
+                        <div>
+                            <span class="mode-indicator mode-data-dot"></span>
+                            数据分析 • 20:45
+                        </div>
+                        <div>6月10日</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 空状态（备用，当没有记录时显示） 
+            <div class="empty-state">
+                <i class="fas fa-history empty-icon"></i>
+                <h3 class="text-lg font-semibold mb-2">暂无历史记录</h3>
+                <p class="text-sm">你的录音转写记录将会显示在这里</p>
+                <button class="primary-button mt-6">开始新录音</button>
+            </div>
+            -->
+        </div>
+    </div>
+    
+    <!-- 底部标签栏 -->
+    <div class="tab-bar">
+        <div class="tab-item">
+            <i class="fas fa-home tab-icon"></i>
+            <div class="tab-label">首页</div>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-microphone tab-icon"></i>
+            <div class="tab-label">录音</div>
+        </div>
+        <div class="tab-item active">
+            <i class="fas fa-history tab-icon"></i>
+            <div class="tab-label">历史</div>
+        </div>
+        <div class="tab-item">
+            <i class="fas fa-user tab-icon"></i>
+            <div class="tab-label">我的</div>
+        </div>
+    </div>
+</body>
+<script>
+    // 更新状态栏时间
+    function updateTime() {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        document.getElementById('status-time').innerText = `${hours}:${minutes}`;
+    }
+    
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+        updateTime();
+        setInterval(updateTime, 60000);
+    });
+</script>
+</html> 

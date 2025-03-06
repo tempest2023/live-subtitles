@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 语音笔记应用</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 20px;
+        }
+        
+        .login-logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 40px;
+            border-radius: 24px;
+            background-color: #007aff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 60px;
+        }
+        
+        .social-login-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 12px 20px;
+            margin-bottom: 16px;
+            width: 100%;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .social-login-button:hover {
+            background-color: #f5f5f7;
+        }
+        
+        .social-icon {
+            margin-right: 12px;
+            font-size: 20px;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .divider-line {
+            flex-grow: 1;
+            height: 1px;
+            background-color: #e5e5e5;
+        }
+        
+        .divider-text {
+            padding: 0 16px;
+            color: #8e8e93;
+        }
+    </style>
+</head>
+<body class="bg-white h-screen">
+    <!-- iOS 状态栏 -->
+    <div class="ios-status-bar">
+        <div class="status-bar-time" id="status-time">9:41</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <div class="login-container fade-in">
+        <div class="login-logo">
+            <i class="fas fa-microphone-alt"></i>
+        </div>
+        
+        <h1 class="text-3xl font-bold mb-6 text-center">语音笔记</h1>
+        <p class="text-gray-500 mb-8 text-center">智能语音转文字，高效管理你的对话记录</p>
+        
+        <input type="text" class="ios-input" placeholder="手机号码或邮箱">
+        <input type="password" class="ios-input" placeholder="密码">
+        
+        <button class="primary-button w-full mb-5">登录</button>
+        <a href="#" class="text-blue-500 mb-8">忘记密码？</a>
+        
+        <div class="divider">
+            <div class="divider-line"></div>
+            <div class="divider-text">或</div>
+            <div class="divider-line"></div>
+        </div>
+        
+        <button class="social-login-button">
+            <i class="fab fa-apple social-icon" style="color: black;"></i>
+            <span>使用 Apple 账号登录</span>
+        </button>
+        
+        <button class="social-login-button">
+            <i class="fab fa-weixin social-icon" style="color: #07C160;"></i>
+            <span>使用微信账号登录</span>
+        </button>
+        
+        <p class="mt-8 text-gray-500">还没有账号？<a href="#" class="text-blue-500">立即注册</a></p>
+    </div>
+</body>
+<script>
+    // 更新状态栏时间
+    function updateTime() {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        document.getElementById('status-time').innerText = `${hours}:${minutes}`;
+    }
+    
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', function() {
+        updateTime();
+        setInterval(updateTime, 60000);
+    });
+</script>
+</html> 
